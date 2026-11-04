@@ -67,7 +67,7 @@ def get_cell_info(V):
     return nucleus_mask, m.sum(), nucleus_mask.sum(), GFP, RFP 
 
 
-def pipeline(path, c1, c2):
+def pipeline(path, c1, c2, gpu_status):
     '''
     Use Cellpose to segment the cells and the hungarian algorithm to track the masks. Extrack single cell information \
     Output:
@@ -75,7 +75,7 @@ def pipeline(path, c1, c2):
     - .csv file with cell information 
     '''
 
-    model = models.CellposeModel(gpu=True)
+    model = models.CellposeModel(gpu=gpu_status)
 
     if 'automated_analysis' not in os.listdir(path):
         os.mkdir(path+'automated_analysis')
@@ -113,6 +113,7 @@ def pipeline(path, c1, c2):
                         for i in range(len(infos)):
                             nucleus_mask, Msum, Nsum, GFP, RFP =infos[i]
                             cell=list_inputs[i][4]
+
                             nucleus_masks+=nucleus_mask*mask
                             dic_info['ImgID'].append(name)
                             dic_info['Frame'].append(t)
@@ -121,7 +122,10 @@ def pipeline(path, c1, c2):
                             dic_info['NucleusArea'].append(Nsum)
                             dic_info['Channel_'+str(c2+1)].append(GFP)
                             dic_info['Channel_'+str(c1+1)].append(RFP)
-                        all_nuclear_mask.append(nucleus_masks)
+                        
+                    all_nuclear_mask.append(nucleus_masks)
+                    
+            
                 pd.DataFrame(dic_info).to_csv(f'{out_path}{name}_info.csv'.format())
                 tif.imwrite(f'{out_path}{name}_nuclear_masks.tif'.format(), np.array(all_nuclear_mask))
 
@@ -137,4 +141,5 @@ if __name__ == '__main__':
     path=sys.argv[1]
     c1=int(sys.argv[2])
     c2=int(sys.argv[3])
-    pipeline(path, c1, c2)
+    gpu_status=True
+    pipeline(path, c1, c2, gpu_status)

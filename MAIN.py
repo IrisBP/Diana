@@ -100,7 +100,7 @@ def pipeline(path, c1, c2):
             if f'{name}_info.csv'.format() not in os.listdir(out_path):
                 tracked_masks=tif.imread(f'{out_path}{name}_masks.tif'.format().format())
                 thread_count=cpu_count()
-                dic_info={'ImgID':[], 'Frame':[], 'Cell':[], 'CellArea':[], 'NucleusArea':[], 'CellGFP':[], 'CellRFP':[]}
+                dic_info={'ImgID':[], 'Frame':[], 'Cell':[], 'CellArea':[], 'NucleusArea':[], 'Channel_'+str(c2+1):[], 'Channel_'+str(c1+1):[]}
                 all_nuclear_mask=[]
                 for t in tqdm.tqdm(range(T), desc='Description', leave=True):  
                     mask=tracked_masks[t]
@@ -119,8 +119,8 @@ def pipeline(path, c1, c2):
                             dic_info['Cell'].append(cell)
                             dic_info['CellArea'].append(Msum)
                             dic_info['NucleusArea'].append(Nsum)
-                            dic_info['CellGFP'].append(GFP)
-                            dic_info['CellRFP'].append(RFP)
+                            dic_info['Channel_'+str(c2+1)].append(GFP)
+                            dic_info['Channel_'+str(c1+1)].append(RFP)
                         all_nuclear_mask.append(nucleus_masks)
                 pd.DataFrame(dic_info).to_csv(f'{out_path}{name}_info.csv'.format())
                 tif.imwrite(f'{out_path}{name}_nuclear_masks.tif'.format(), np.array(all_nuclear_mask))

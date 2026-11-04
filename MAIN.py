@@ -126,7 +126,7 @@ def pipeline(path, c1, c2, gpu_status):
                     all_nuclear_mask.append(nucleus_masks)
                     
             
-                pd.DataFrame(dic_info).to_csv(f'{out_path}{name}_info.csv'.format())
+                pd.DataFrame(dic_info).to_csv(f'{out_path}{name}_info.csv'.format(), index=False)
                 tif.imwrite(f'{out_path}{name}_nuclear_masks.tif'.format(), np.array(all_nuclear_mask))
 
     return               

@@ -1,4 +1,4 @@
-# Yeast analysis pipeline for Diana
+#Yeast analysis pipeline for Diana
 
 
 ##Prerequisite: 

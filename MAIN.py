@@ -94,6 +94,7 @@ def pipeline(path,path_img, path_roi,  c1, c2, gpu_status):
                             x=round((r.right+r.left)/2)
                             y=round((r.top+r.bottom)/2)
                             f=r.position
+                            f=f-1
                             annotation=r.name
                             frame=tracked_masks[f]
                             maskID=frame[y,x]
